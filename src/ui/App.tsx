@@ -219,7 +219,7 @@ export default function App() {
         onSelectAll={() => setIcons((currentIcons) => currentIcons.map((icon) => ({ ...icon, selected: true })))}
       />
 
-      <main className="flex flex-col gap-4 px-4 pb-28 pt-32">
+      <main className="flex flex-col gap-4 px-4 pb-28 pt-40">
         <section className="rounded-[32px] border border-white/10 bg-panel px-5 py-5 shadow-panel">
           <div className="flex items-start justify-between gap-4">
             <div>

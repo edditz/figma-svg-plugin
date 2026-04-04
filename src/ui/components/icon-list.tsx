@@ -54,7 +54,7 @@ export function IconList({
         </div>
       </div>
 
-      <ScrollArea className="h-[320px] pr-3">
+      <div className="pr-3">
         <div className="flex flex-col gap-3">
           {items.map((item) => (
             <div
@@ -123,7 +123,7 @@ export function IconList({
             </div>
           ))}
         </div>
-      </ScrollArea>
+      </div>
     </section>
   )
 }

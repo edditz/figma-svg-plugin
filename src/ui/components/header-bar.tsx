@@ -33,7 +33,7 @@ export function HeaderBar({
 }: HeaderBarProps) {
   return (
     <TooltipProvider delayDuration={120}>
-      <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-panel/80 px-4 py-3 backdrop-blur-xl">
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-panel/80 px-4 pb-5 pt-3 backdrop-blur-xl">
         <div className="flex flex-col gap-3">
           <div className="flex items-start gap-3">
             <div className="grid h-11 w-11 shrink-0 place-content-center rounded-2xl border border-white/10 bg-white/5 shadow-glow">
