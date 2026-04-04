@@ -1,5 +1,7 @@
 import { Layers3, RefreshCcw, Sparkles, Wand2 } from "lucide-react"
 
+import { type ReactNode } from "react"
+
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -14,6 +16,7 @@ interface HeaderBarProps {
   scanning: boolean
   converting: boolean
   hasResults: boolean
+  settingsSlot?: ReactNode
   onRefresh: () => void
   onSelectAll: () => void
   onInvert: () => void
@@ -26,6 +29,7 @@ export function HeaderBar({
   scanning,
   converting,
   hasResults,
+  settingsSlot,
   onRefresh,
   onSelectAll,
   onInvert,
@@ -72,6 +76,7 @@ export function HeaderBar({
               </TooltipTrigger>
               <TooltipContent>重新扫描当前选区</TooltipContent>
             </Tooltip>
+            {settingsSlot}
             <Button
               size="sm"
               variant="outline"

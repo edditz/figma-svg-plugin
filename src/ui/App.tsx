@@ -179,6 +179,13 @@ export default function App() {
         hasResults={results.length > 0}
         scanning={isScanning}
         selected={selectedIcons.length}
+        settingsSlot={
+          <ExportSettings
+            disabled={isConverting}
+            settings={settings}
+            onChange={setSettings}
+          />
+        }
         total={icons.length}
         onInvert={() => setIcons((currentIcons) => currentIcons.map((icon) => ({ ...icon, selected: !icon.selected })))}
         onOpenResults={() => setDrawerOpen(true)}
@@ -219,12 +226,6 @@ export default function App() {
           onFocus={setActiveId}
           onReveal={revealOnCanvas}
           onToggle={(iconId, checked) => updateIcon(iconId, (icon) => ({ ...icon, selected: checked }))}
-        />
-
-        <ExportSettings
-          disabled={isConverting}
-          settings={settings}
-          onChange={setSettings}
         />
 
         <PreviewPanel
