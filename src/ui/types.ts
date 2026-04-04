@@ -10,7 +10,6 @@ export interface ExportSettingsState {
   suffix: string
   precision: number
   optimize: boolean
-  outputSubdirectory: string
 }
 
 export interface PreviewSelection {

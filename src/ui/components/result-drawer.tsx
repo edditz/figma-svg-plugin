@@ -1,4 +1,4 @@
-import { Download, FolderSymlink, Sparkles, TriangleAlert } from "lucide-react"
+import { Download, Sparkles, TriangleAlert } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,10 +16,8 @@ interface ResultDrawerProps {
   open: boolean
   results: VectorDrawableResult[]
   summary: ResultSummary
-  directoryLabel?: string
   onOpenChange: (open: boolean) => void
   onDownloadZip: () => void
-  onWriteDirectory: () => void
   onDownloadSingle: (result: VectorDrawableResult) => void
 }
 
@@ -27,10 +25,8 @@ export function ResultDrawer({
   open,
   results,
   summary,
-  directoryLabel,
   onOpenChange,
   onDownloadZip,
-  onWriteDirectory,
   onDownloadSingle,
 }: ResultDrawerProps) {
   return (
@@ -61,20 +57,10 @@ export function ResultDrawer({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 border-b border-white/10 px-6 pb-4">
+        <div className="border-b border-white/10 px-6 pb-4">
           <Button className="rounded-2xl bg-gradient-to-r from-primary to-accent" onClick={onDownloadZip}>
             <Download className="mr-2 h-4 w-4" /> 下载 ZIP
           </Button>
-          <Button
-            className="rounded-2xl border-white/10 bg-white/5 hover:bg-white/10"
-            variant="outline"
-            onClick={onWriteDirectory}
-          >
-            <FolderSymlink className="mr-2 h-4 w-4" /> 写入目录
-          </Button>
-          <div className="text-[12px] text-muted-foreground">
-            {directoryLabel ? `目标目录：${directoryLabel}` : "未选择目录时仅支持 ZIP 下载。"}
-          </div>
         </div>
 
         <ScrollArea className="h-[calc(100vh-250px)] px-6 py-4">

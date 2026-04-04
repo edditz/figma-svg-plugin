@@ -1,6 +1,3 @@
-import { FolderOpen, PackageOpen } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -9,17 +6,13 @@ import type { ExportSettingsState } from "@/ui/types"
 
 interface ExportSettingsProps {
   settings: ExportSettingsState
-  directoryLabel?: string
   disabled?: boolean
-  onPickDirectory: () => void
   onChange: (nextSettings: ExportSettingsState) => void
 }
 
 export function ExportSettings({
   settings,
-  directoryLabel,
   disabled,
-  onPickDirectory,
   onChange,
 }: ExportSettingsProps) {
   return (
@@ -27,24 +20,11 @@ export function ExportSettings({
       <div className="mb-4 space-y-1">
         <p className="text-[14px] font-semibold text-foreground">导出设置</p>
         <p className="text-[12px] leading-5 text-muted-foreground">
-          设置 Android 资源目录、命名前后缀与压缩精度。插件优先写入你选择的本地目录，不支持时自动回退为 ZIP 下载。
+          设置命名前后缀与压缩精度。转换完成后将打包为 ZIP 下载。
         </p>
       </div>
 
       <div className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="output-directory">输出资源路径</Label>
-          <Input
-            id="output-directory"
-            className="h-11 rounded-2xl border-white/10 bg-white/5"
-            disabled={disabled}
-            value={settings.outputSubdirectory}
-            onChange={(event) =>
-              onChange({ ...settings, outputSubdirectory: event.target.value })
-            }
-          />
-        </div>
-
         <div className="grid grid-cols-2 gap-3">
           <div className="grid gap-2">
             <Label htmlFor="prefix">文件名前缀</Label>
@@ -101,29 +81,6 @@ export function ExportSettings({
             disabled={disabled}
             onCheckedChange={(checked) => onChange({ ...settings, optimize: checked })}
           />
-        </div>
-
-        <div className="flex flex-col gap-3 rounded-[22px] border border-white/8 bg-white/[0.04] p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="space-y-1">
-              <p className="text-[13px] font-semibold text-foreground">本地保存目录</p>
-              <p className="text-[12px] text-muted-foreground">
-                {directoryLabel ? `已选择：${directoryLabel}` : "未选择目录时，导出按钮将生成 ZIP 下载。"}
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="rounded-2xl border-white/10 bg-white/5 hover:bg-white/10"
-              disabled={disabled}
-              onClick={onPickDirectory}
-            >
-              <FolderOpen className="mr-2 h-4 w-4" /> 选择目录
-            </Button>
-          </div>
-          <div className="flex items-center gap-2 rounded-2xl bg-accent/10 px-3 py-2 text-[12px] text-accent">
-            <PackageOpen className="h-4 w-4" />
-            ZIP 导出会保留上方填写的相对目录结构。
-          </div>
         </div>
       </div>
     </section>

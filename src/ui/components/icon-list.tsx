@@ -54,7 +54,7 @@ export function IconList({
         </div>
       </div>
 
-      <div className="pr-3">
+      <div>
         <div className="flex flex-col gap-3">
           {items.map((item) => (
             <div
@@ -113,7 +113,7 @@ export function IconList({
                 <Button
                   size="icon"
                   variant="outline"
-                  className="h-10 w-10 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10"
+                  className="aspect-square h-10 w-10 rounded-full border-white/10 bg-white/5 hover:bg-white/10"
                   disabled={disabled}
                   onClick={() => onReveal(item.id)}
                 >

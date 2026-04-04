@@ -60,5 +60,4 @@ export interface VectorDrawableResult {
 export interface ConversionOptions {
   precision: number
   optimize: boolean
-  outputSubdirectory: string
 }

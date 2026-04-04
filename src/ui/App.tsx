@@ -6,7 +6,6 @@ import { Progress } from "@/components/ui/progress"
 import {
   applyNamePattern,
   dedupeFileNames,
-  joinOutputPath,
   normalizeAndroidResourceName,
 } from "@/shared/filename"
 import type { VectorDrawableResult } from "@/shared/types"
@@ -20,8 +19,6 @@ import { buildResultSummary, type ExportSettingsState, type UiIconItem } from "@
 import {
   downloadResultsZip,
   downloadSingleResult,
-  pickDirectoryHandle,
-  writeResultsToDirectory,
 } from "@/ui/utils/export-files"
 
 const defaultSettings: ExportSettingsState = {
@@ -29,7 +26,6 @@ const defaultSettings: ExportSettingsState = {
   suffix: "",
   precision: 4,
   optimize: true,
-  outputSubdirectory: "app/src/main/res/drawable",
 }
 
 function toUiIcon(candidate: Omit<UiIconItem, "selected" | "fileName">): UiIconItem {
@@ -43,8 +39,6 @@ export default function App() {
   const [settings, setSettings] = useState(defaultSettings)
   const [activeId, setActiveId] = useState<string>()
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [directoryHandle, setDirectoryHandle] = useState<FileSystemDirectoryHandle | null>(null)
-  const [directoryLabel, setDirectoryLabel] = useState("")
   const [notice, setNotice] = useState("先扫描当前 Figma 选区，然后开始批量转换。")
   const [isScanning, setIsScanning] = useState(false)
   const [isConverting, setIsConverting] = useState(false)
@@ -129,7 +123,7 @@ export default function App() {
           id: item.id,
           name: item.name,
           fileName,
-          outputPath: joinOutputPath(settings.outputSubdirectory, fileName),
+          outputPath: `${fileName}.xml`,
           status: blockingWarnings.length > 0 ? "error" : "success",
           xml: converted.xml,
           error: blockingWarnings.map((warning) => warning.message).join("；"),
@@ -142,7 +136,7 @@ export default function App() {
         id: failure.id,
         name: failure.name,
         fileName: failure.suggestedFileName,
-        outputPath: joinOutputPath(settings.outputSubdirectory, failure.suggestedFileName),
+        outputPath: `${failure.suggestedFileName}.xml`,
         status: "error",
         xml: "",
         error: failure.message,
@@ -169,36 +163,9 @@ export default function App() {
     }
   }
 
-  const handlePickDirectory = () => {
-    pickDirectoryHandle()
-      .then((handle) => {
-        setDirectoryHandle(handle)
-        setDirectoryLabel(handle.name)
-        setNotice(`已选择本地目录：${handle.name}`)
-      })
-      .catch((error: Error) => {
-        console.error(error)
-        setNotice(error.message)
-      })
-  }
-
   const handleZipDownload = () => {
     downloadResultsZip(results, "android-vectordrawables")
       .then(() => setNotice("ZIP 已生成并开始下载。"))
-      .catch((error: Error) => {
-        console.error(error)
-        setNotice(error.message)
-      })
-  }
-
-  const handleDirectoryWrite = () => {
-    if (!directoryHandle) {
-      handlePickDirectory()
-      return
-    }
-
-    writeResultsToDirectory(directoryHandle, results)
-      .then((writtenFiles) => setNotice(`已写入 ${writtenFiles.length} 个 XML 文件到 ${directoryLabel}。`))
       .catch((error: Error) => {
         console.error(error)
         setNotice(error.message)
@@ -255,11 +222,9 @@ export default function App() {
         />
 
         <ExportSettings
-          directoryLabel={directoryLabel}
           disabled={isConverting}
           settings={settings}
           onChange={setSettings}
-          onPickDirectory={handlePickDirectory}
         />
 
         <PreviewPanel
@@ -276,7 +241,7 @@ export default function App() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[14px] font-semibold text-foreground">已勾选 {selectedIcons.length} 个图标</p>
-            <p className="text-[12px] text-muted-foreground">转换后可直接下载 ZIP，或写入你选择的本地目录。</p>
+            <p className="text-[12px] text-muted-foreground">转换后将打包为 ZIP 下载。</p>
           </div>
           <Button
             className="h-12 rounded-2xl bg-gradient-to-r from-primary to-accent px-6 text-white shadow-glow hover:opacity-90"
@@ -294,14 +259,12 @@ export default function App() {
       </div>
 
       <ResultDrawer
-        directoryLabel={directoryLabel}
         open={drawerOpen}
         results={results}
         summary={summary}
         onDownloadSingle={downloadSingleResult}
         onDownloadZip={handleZipDownload}
         onOpenChange={setDrawerOpen}
-        onWriteDirectory={handleDirectoryWrite}
       />
     </div>
   )
