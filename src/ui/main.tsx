@@ -2,6 +2,7 @@ import { Component, StrictMode, type ReactNode } from "react"
 import { createRoot } from "react-dom/client"
 
 import App from "./App"
+import { DevTools } from "./components/dev-tools"
 import "./styles/globals.css"
 
 function formatError(error: unknown) {
@@ -75,6 +76,7 @@ function bootstrap() {
       <StrictMode>
         <UiErrorBoundary>
           <App />
+          <DevTools />
         </UiErrorBoundary>
       </StrictMode>,
     )

@@ -4,6 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SVG to VectorDrawable</title>
+    <script>
+      // Polyfill: localStorage is unavailable in Figma's data: URL sandbox
+      try { localStorage.getItem('__test__') } catch {
+        const s = Object.create(null)
+        s._d = '{}'
+        Object.defineProperty(window, 'localStorage', {
+          value: {
+            getItem(k) { return (JSON.parse(s._d))[k] ?? null },
+            setItem(k, v) { const d = JSON.parse(s._d); d[k] = String(v); s._d = JSON.stringify(d) },
+            removeItem(k) { const d = JSON.parse(s._d); delete d[k]; s._d = JSON.stringify(d) },
+            clear() { s._d = '{}' },
+            get length() { return Object.keys(JSON.parse(s._d)).length },
+            key(i) { return Object.keys(JSON.parse(s._d))[i] ?? null },
+          },
+        })
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
