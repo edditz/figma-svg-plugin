@@ -33,7 +33,7 @@ export function ResultDrawer({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        className="w-[96vw] max-w-[560px] border-white/10 bg-[#101429]/95 px-0 text-foreground backdrop-blur-2xl"
+        className="flex max-h-screen w-[96vw] max-w-[560px] flex-col overflow-hidden border-white/10 bg-[#101429]/95 px-0 text-foreground backdrop-blur-2xl"
         side="right"
       >
         <SheetHeader className="border-b border-white/10 px-6 pb-4">
@@ -64,25 +64,27 @@ export function ResultDrawer({
           </Button>
         </div>
 
-        <ScrollArea className="h-[calc(100vh-250px)] px-6 py-4">
+        <ScrollArea className="flex-1 overflow-hidden px-6 py-4 [&>div]:max-w-full">
           <div className="flex flex-col gap-3 pb-6">
             {results.map((result) => (
               <div
                 key={`${result.id}-${result.fileName}`}
-                className="rounded-[24px] border border-white/10 bg-white/[0.04] p-4"
+                className="min-w-0 rounded-[24px] border border-white/10 bg-white/[0.04] p-4"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2 text-[14px] font-semibold text-foreground">
-                      <Sparkles className="h-4 w-4 text-primary" />
-                      <span>{result.fileName}.xml</span>
+                <div className="flex min-w-0 items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 items-center gap-2 text-[14px] font-semibold text-foreground">
+                      <Sparkles className="h-4 w-4 shrink-0 text-primary" />
+                      <span className="break-all">{result.fileName}.xml</span>
                     </div>
-                    <p className="mt-1 text-[12px] text-muted-foreground">{result.outputPath}</p>
+                    <p className="mt-1 break-all text-[12px] text-muted-foreground">{result.outputPath}</p>
                   </div>
                   <span
-                    className={result.status === "success"
-                      ? "rounded-full bg-success/10 px-2 py-1 text-[11px] text-success"
-                      : "rounded-full bg-destructive/10 px-2 py-1 text-[11px] text-destructive"}
+                    className={`shrink-0 rounded-full px-2 py-1 text-[11px] ${
+                      result.status === "success"
+                        ? "bg-success/10 text-success"
+                        : "bg-destructive/10 text-destructive"
+                    }`}
                   >
                     {result.status === "success" ? "Success" : "Failed"}
                   </span>
@@ -102,8 +104,8 @@ export function ResultDrawer({
                       </span>
                     </>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-3 py-1 text-[11px] text-destructive">
-                      <TriangleAlert className="h-3.5 w-3.5" /> {result.error}
+                    <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-3 py-1 text-[11px] text-destructive break-all">
+                      <TriangleAlert className="h-3.5 w-3.5 shrink-0" /> {result.error}
                     </span>
                   )}
                 </div>
@@ -113,7 +115,7 @@ export function ResultDrawer({
                     {result.warnings.map((warning) => (
                       <span
                         key={`${result.id}-${warning.code}`}
-                        className="rounded-full bg-warning/10 px-3 py-1 text-[11px] text-warning"
+                        className="rounded-full bg-warning/10 px-3 py-1 text-[11px] text-warning break-all"
                       >
                         {warning.message}
                       </span>
@@ -176,7 +178,7 @@ function ResultPreview({ result }: { result: VectorDrawableResult }) {
           )}
 
           {result.xml && (
-            <div className="min-w-0 rounded-xl border border-white/10 bg-white/[0.02] p-3">
+            <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/[0.02] p-3">
               <p className="mb-2 text-[11px] text-muted-foreground">VectorDrawable (XML)</p>
               <pre className="overflow-x-hidden rounded-lg bg-black/20 p-2 text-[10px] leading-4 text-muted-foreground">
                 <code className="block w-full break-all whitespace-pre-wrap">{result.xml}</code>
