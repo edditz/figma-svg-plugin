@@ -31,7 +31,10 @@ function decodeUtf8(bytes: Uint8Array) {
     let fallback = ""
 
     for (let index = 0; index < bytes.length; index += 8192) {
-      fallback += String.fromCharCode(...bytes.slice(index, index + 8192))
+      const chunk = bytes.slice(index, index + 8192)
+      for (let i = 0; i < chunk.length; i++) {
+        fallback += String.fromCharCode(chunk[i])
+      }
     }
 
     return fallback

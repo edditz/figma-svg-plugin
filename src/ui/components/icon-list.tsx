@@ -1,4 +1,5 @@
-import { AlertTriangle, Eye, Layers2 } from "lucide-react"
+import { useState } from "react"
+import { AlertTriangle, ChevronDown, Eye, Layers2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -26,6 +27,20 @@ export function IconList({
   onReveal,
   onFileNameChange,
 }: IconListProps) {
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
   if (items.length === 0) {
     return (
       <section className="rounded-[28px] border border-white/10 bg-panel px-4 py-5 shadow-panel">
@@ -120,6 +135,30 @@ export function IconList({
                   <Eye className="h-4 w-4" />
                 </Button>
               </div>
+
+              {item.thumbnail && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+                    onClick={() => toggleExpand(item.id)}
+                  >
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform ${expandedIds.has(item.id) ? "rotate-180" : ""}`} />
+                    预览
+                  </button>
+                  {expandedIds.has(item.id) && (
+                    <div className="mt-2 rounded-xl border border-white/10 bg-white/[0.02] p-3">
+                      <div className="flex items-center justify-center rounded-lg bg-[repeating-conic-gradient(#ffffff08_0%_25%,transparent_0%_50%)] bg-[length:16px_16px] p-4">
+                        <img
+                          src={item.thumbnail}
+                          alt={item.name}
+                          className="max-h-32 max-w-full object-contain"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

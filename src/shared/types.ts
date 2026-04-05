@@ -15,6 +15,7 @@ export interface IconCandidate {
   nodeType: string
   selectionDepth: number
   warnings: ConversionWarning[]
+  thumbnail?: string
 }
 
 export interface ExportedSvg {

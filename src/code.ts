@@ -15,10 +15,27 @@ function postMessage(message: PluginMessage) {
 
 async function handleRequest(message: UiRequest) {
   if (message.type === "SCAN_SELECTION") {
+    const candidates = scanSelection(figma.currentPage.selection)
+
+    const withThumbnails = await Promise.all(
+      candidates.map(async (candidate) => {
+        const node = figma.getNodeById(candidate.id) as SceneNode & ExportMixin
+        if (!node || typeof node.exportAsync !== "function") return candidate
+
+        try {
+          const bytes = await node.exportAsync({ format: "PNG", constraint: { type: "SCALE", value: 2 } })
+          const base64 = figma.base64Encode(bytes)
+          return Object.assign({}, candidate, { thumbnail: `data:image/png;base64,${base64}` })
+        } catch (_error) {
+          return candidate
+        }
+      }),
+    )
+
     postMessage({
       type: "SCAN_RESULT",
       requestId: message.requestId,
-      icons: scanSelection(figma.currentPage.selection),
+      icons: withThumbnails,
     })
     return
   }
