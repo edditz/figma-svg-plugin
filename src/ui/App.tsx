@@ -219,7 +219,7 @@ export default function App() {
           disabled={isConverting}
           items={icons}
           onFileNameChange={(iconId, fileName) =>
-            updateIcon(iconId, (icon) => ({ ...icon, fileName: normalizeAndroidResourceName(fileName || icon.name) }))
+            updateIcon(iconId, (icon) => ({ ...icon, fileName }))
           }
           onFocus={setActiveId}
           onReveal={revealOnCanvas}

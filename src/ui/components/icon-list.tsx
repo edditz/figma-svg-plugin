@@ -124,6 +124,11 @@ export function IconList({
                   disabled={disabled}
                   value={item.fileName}
                   onChange={(event) => onFileNameChange(item.id, event.target.value)}
+                  onBlur={(event) => {
+                    if (event.target.value.trim() === "") {
+                      onFileNameChange(item.id, item.suggestedFileName)
+                    }
+                  }}
                 />
                 <Button
                   size="icon"
