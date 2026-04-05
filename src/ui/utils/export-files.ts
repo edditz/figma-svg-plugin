@@ -24,8 +24,10 @@ export async function downloadResultsZip(results: VectorDrawableResult[], archiv
   const { default: JSZip } = await import("jszip")
   const zip = new JSZip()
 
+  const folder = zip.folder(archiveName)
+
   getSuccessfulResults(results).forEach((result) => {
-    zip.file(result.outputPath, result.xml)
+    folder!.file(result.outputPath, result.xml)
   })
 
   const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" })
