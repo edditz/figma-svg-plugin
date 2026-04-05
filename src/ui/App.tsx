@@ -12,7 +12,6 @@ import type { VectorDrawableResult } from "@/shared/types"
 import { HeaderBar } from "@/ui/components/header-bar"
 import { ExportSettings } from "@/ui/components/export-settings"
 import { IconList } from "@/ui/components/icon-list"
-import { PreviewPanel } from "@/ui/components/preview-panel"
 import { ResultDrawer } from "@/ui/components/result-drawer"
 import { usePluginBridge } from "@/ui/hooks/use-plugin-bridge"
 import { buildResultSummary, type ExportSettingsState, type UiIconItem } from "@/ui/types"
@@ -72,7 +71,6 @@ export default function App() {
 
   const selectedIcons = useMemo(() => icons.filter((icon) => icon.selected), [icons])
   const activeIcon = useMemo(() => icons.find((icon) => icon.id === activeId), [activeId, icons])
-  const activeResult = useMemo(() => results.find((result) => result.id === activeId), [activeId, results])
   const summary = useMemo(() => buildResultSummary(results), [results])
   const progressValue = progress ? Math.round((progress.completed / Math.max(progress.total, 1)) * 100) : 0
 
@@ -228,14 +226,6 @@ export default function App() {
           onToggle={(iconId, checked) => updateIcon(iconId, (icon) => ({ ...icon, selected: checked }))}
         />
 
-        <PreviewPanel
-          preview={{
-            icon: activeIcon,
-            warnings: activeResult?.warnings ?? activeIcon?.warnings ?? [],
-            xml: activeResult?.xml,
-            sourceSvg: activeResult?.sourceSvg,
-          }}
-        />
       </main>
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-panel/85 px-4 py-4 backdrop-blur-xl">

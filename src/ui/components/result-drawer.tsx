@@ -1,4 +1,5 @@
-import { Download, Sparkles, TriangleAlert } from "lucide-react"
+import { useState } from "react"
+import { ChevronDown, Download, Sparkles, TriangleAlert } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -120,6 +121,8 @@ export function ResultDrawer({
                   </div>
                 )}
 
+                <ResultPreview result={result} />
+
                 {result.status === "success" && (
                   <Button
                     className="mt-4 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10"
@@ -135,5 +138,53 @@ export function ResultDrawer({
         </ScrollArea>
       </SheetContent>
     </Sheet>
+  )
+}
+
+function ResultPreview({ result }: { result: VectorDrawableResult }) {
+  const [expanded, setExpanded] = useState(false)
+  const svgDataUri = result.sourceSvg
+    ? `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(result.sourceSvg)))}`
+    : undefined
+
+  if (!svgDataUri && !result.xml) return null
+
+  return (
+    <div className="mt-4">
+      <button
+        type="button"
+        className="flex w-full items-center gap-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+        onClick={() => setExpanded((prev) => !prev)}
+      >
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${expanded ? "rotate-180" : ""}`} />
+        预览
+      </button>
+
+      {expanded && (
+        <div className="mt-3 flex flex-col gap-3">
+          {svgDataUri && (
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3">
+              <p className="mb-2 text-[11px] text-muted-foreground">原图 (SVG)</p>
+              <div className="flex items-center justify-center rounded-lg bg-[repeating-conic-gradient(#ffffff08_0%_25%,transparent_0%_50%)] bg-[length:16px_16px] p-4">
+                <img
+                  src={svgDataUri}
+                  alt={result.name}
+                  className="max-h-32 max-w-full object-contain"
+                />
+              </div>
+            </div>
+          )}
+
+          {result.xml && (
+            <div className="min-w-0 rounded-xl border border-white/10 bg-white/[0.02] p-3">
+              <p className="mb-2 text-[11px] text-muted-foreground">VectorDrawable (XML)</p>
+              <pre className="overflow-x-hidden rounded-lg bg-black/20 p-2 text-[10px] leading-4 text-muted-foreground">
+                <code className="block w-full break-all whitespace-pre-wrap">{result.xml}</code>
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   )
 }
